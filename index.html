@@ -9,28 +9,32 @@
 </head>
 <body>
 
-<div class="search">
-    <div class="search__row">
-        <div class="search__container">
-            <div class="search__title-container">
-                <h2 class="search__title">Поиск</h2>
-                <span id="search-count" class="search__count">0</span>
+<div class="body-container" id="body-container">
+    <div class="search">
+        <div class="search__row">
+            <div class="search__container">
+                <div class="search__title-container">
+                    <h2 class="search__title">Поиск</h2>
+                    <span id="search-count" class="search__count">0</span>
+                </div>
+
+                <input type="text" class="search__input" id="search-input">
             </div>
 
-            <input type="text" class="search__input" id="search-input">
+            <button class="clear__button" id="clear-button">Стереть</button>
+
+            <button class="search__button" id="search-button">
+                <span>Применить</span>
+            </button>
         </div>
 
-        <button class="clear__button" id="clear-button">Стереть</button>
-
-        <button class="search__button" id="search-button">
-            <span>Применить</span>
-        </button>
+        <div class="search__filter" id="search-filter"></div>
     </div>
 
-    <div class="search__filter" id="search-filter"></div>
+    <div id="content" class="content" style="display: none;"></div>
 </div>
 
-<div id="content" class="content" style="display: none;"></div>
+<button class="scroll-to-up-button">UP</button>
 
 <script type="text/html" id="template-checkbox">
     <label class="checkbox">

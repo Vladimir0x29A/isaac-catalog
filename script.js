@@ -1,5 +1,3 @@
-// TODO: Сделать кнопку "вверх"
-
 (function () {
     // Заполнить фильтр чекбоксами
     const checkboxContainer = document.querySelector('#search-filter');
@@ -31,6 +29,11 @@
         checkboxContainer.appendChild(content.firstChild);
     });
 
+
+
+    // Кнопка "вверх"
+    const scrollToUpButton = document.querySelector('.scroll-to-up-button');
+    scrollToUpButton.addEventListener('click', e => window.scrollTo(0,0));
 
 
 
@@ -262,7 +265,7 @@
     let searchRegex;
 
 
-    const bodyEl = document.body;
+    const bodyEl = document.querySelector('#body-container');
 
     function fillContent() {
         while (bodyEl.getBoundingClientRect().bottom - 100 <= window.innerHeight && dataFiltered.length) {
