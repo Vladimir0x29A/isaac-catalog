@@ -6,6 +6,8 @@
     const checkboxSet = [
         'devil',
         'angel',
+        'boss',
+        'treasure',
         'shop',
         'curse',
         'secret',
