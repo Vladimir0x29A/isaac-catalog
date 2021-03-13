@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Брелоки</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="search">
+    <div class="search__row">
+        <div class="search__container">
+            <h2 class="search__title">Поиск</h2>
+            <input type="text" class="search__input" id="search-input">
+        </div>
+
+        <button class="clear__button" id="clear-button">Стереть</button>
+
+        <button class="search__button" id="search-button">
+            <span>Применить</span>
+        </button>
+    </div>
+
+    <div class="search__filter" id="search-filter"></div>
+</div>
+
+<div id="content" class="content" style="display: none;"></div>
+
+<script type="text/html" id="template-checkbox">
+    <label class="checkbox">
+        <input type="checkbox" style="display: none;">
+        <span class="checkbox__marker"></span>
+        <span class="checkbox__label"></span>
+    </label>
+</script>
+
+<script type="text/html" id="template">
+    <div class="row">
+        <div class="top">__generation__</div>
+
+        <div class="middle">
+            <div class="image">
+                <img src="__img__">
+            </div>
+
+            <div class="names">
+                <p class="name">__name__</p>
+                <p class="name-rus">__name_rus__</p>
+            </div>
+        </div>
+
+        <div class="bottom">__desc__</div>
+    </div>
+</script>
+
+<script src="dataset/trinkets.js"></script>
+<script src="dataset/collectibles.js"></script>
+<script src="dataset/pills.js"></script>
+<script src="dataset/runes.js"></script>
+<script src="dataset/cards.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>

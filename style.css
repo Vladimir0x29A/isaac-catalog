@@ -1,0 +1,284 @@
+* {
+    box-sizing: border-box;
+}
+
+ul {
+    margin: 0;
+}
+
+body {
+    background: #1d2535;
+    padding: 10px;
+    margin: 0;
+    font-family: sans-serif;
+    color: #D5D4D4;
+}
+
+.content {
+    margin-top: 16px;
+    border: 1px #4a515d solid;
+    font-size: 14px;
+}
+
+.top {
+    padding: 6px;
+    padding-bottom: 3px;
+    font-weight: bold;
+    color: #808080;
+}
+
+.middle {
+    display: flex;
+    align-items: center;
+}
+
+.names {
+    flex-grow: 1;
+    padding: 6px;
+    white-space: nowrap;
+}
+
+.image {
+    flex-shrink: 0;
+}
+
+.image img {
+    display: block;
+    /*width: 44px;*/
+    max-height: 44px;
+}
+
+.bottom {
+    position: relative;
+    padding: 6px;
+    font-size: 12px;
+}
+
+.bottom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 12px;
+    right: 12px;
+    height: 1px;
+    background: rgba(74, 81, 93, .5);
+}
+
+h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.section-content {
+    border: 1px #4a515d solid;
+    font-size: 14px;
+}
+
+.section:not(:first-child) {
+    margin-top: 10px;
+}
+
+.row:not(:first-child) {
+    border-top: 1px #4a515d solid;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    color: #b2d6e9;
+    text-decoration: none;
+}
+
+.row.active,
+.row.passive {
+    position: relative;
+}
+
+.row.active::before,
+.row.passive::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.row.passive::before {
+    background: #b84119;
+}
+
+.row.active::before {
+    background: #7fc417;
+}
+
+
+
+
+.search {
+    border: 1px #4a515d solid;
+    padding: 6px;
+}
+
+.search__row {
+    display: flex;
+}
+
+.search__container {
+    flex-grow: 1;
+}
+
+.search__title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.search__input {
+    width: 100%;
+    padding: 4px;
+    margin-top: 6px;
+    border: 1px #4a515d solid;
+    font-size: 14px;
+    color: #D5D4D4;
+    background: #1d2535;
+}
+
+.search__input:focus {
+    border-color: #5c6473;
+    outline: none;
+}
+
+.clear__button,
+.search__button {
+    flex-shrink: 0;
+    margin-left: 6px;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, .5);
+    user-select: none;
+}
+
+.clear__button {
+    background-color: #66732d;
+}
+
+.search__button {
+    position: relative;
+    background-color: #2d4773;
+}
+
+.search__button--pending span {
+    opacity: 0;
+}
+
+@keyframes pending {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+.search__button--pending::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 26px;
+    height: 26px;
+    border: 3px solid white;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    border-radius: 50%;
+    box-sizing: border-box;
+    margin-top: -13px;
+    margin-left: -13px;
+    animation: .5s pending linear infinite;
+}
+
+.search__filter {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    margin-left: -12px;
+    margin-bottom: -8px;
+    font-size: 14px;
+}
+
+.search__filter .checkbox {
+    margin-left: 12px;
+    margin-bottom: 8px;
+}
+
+.found {
+    color: black;
+    background-color: #b2ad24;
+}
+
+
+
+
+
+.checkbox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    user-select: none;
+}
+
+.checkbox__marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+    background-color: #2a364d;
+}
+
+.checkbox__marker::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-color: #5e8046;
+    transition: opacity .2s;
+    opacity: 0;
+}
+
+.checkbox input:checked + .checkbox__marker::after {
+    opacity: 1;
+}
+
+
+
+
+
+.rarity-common {color: #969696;}
+.rarity-white  {color: white;}
+.rarity-green  {color: #3dd20b;}
+.rarity-blue   {color: #2f78ff;}
+.rarity-orange {color: #ff9600;}
+.rarity-purple {color: #8b26d5;}
+.rarity-yellow {color: #f9fc14;}
+.rarity-pink   {color: #ff36ee;}
+.rarity-aqua   {color: #00ffc8;}
+.rarity-cyan   {color: #00eeee;}
+.rarity-red    {color: #d5161e;}
+.rarity-beige  {color: #ffc5b4;}
+.rarity-gold   {color: #e9c43d;}
+.color-black   {color: black;}
+.rarity-kral   {color: #ff6b6b;}
+.rarity-oral   {color: #ffb16b;}
+.rarity-gell   {color: #faff6b;}
+.rarity-zell   {color: #8aff6b;}
+.rarity-goll   {color: #6bffec;}
+.rarity-sinl   {color: #6b9cff;}
+.rarity-fiol   {color: #aa6bff;}
+.rarity-rozl   {color: #ff6bc6;}
