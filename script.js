@@ -1,4 +1,3 @@
-// TODO: Сделать отображения кол-ва найденных элементов
 // TODO: Сделать кнопку "вверх"
 
 (function () {
@@ -263,18 +262,20 @@
     let searchRegex;
 
 
-    // const bodyRect = document.body.getBoundingClientRect();
+    const bodyEl = document.body;
 
     function fillContent() {
-        while (document.body.getBoundingClientRect().bottom - 100 <= window.innerHeight && dataFiltered.length) {
+        while (bodyEl.getBoundingClientRect().bottom - 100 <= window.innerHeight && dataFiltered.length) {
             renderItem(dataFiltered.shift(), searchRegex);
         }
     }
 
+    const countEl = document.querySelector('#search-count');
 
     const formFoundList = search => {
-        while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild);
+        while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild); // Очистить контент
         dataFiltered = filterList(dataReduced, search);
+        countEl.textContent = dataFiltered.length;
         handleContentVisibility(dataFiltered);
         searchRegex = search ? new RegExp(search, 'gi') : null;
 
