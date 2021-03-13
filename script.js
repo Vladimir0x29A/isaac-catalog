@@ -128,7 +128,7 @@
 
 
     // Статус ожидания
-    /*function raf(fn) {
+    function raf(fn) {
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 fn();
@@ -136,7 +136,7 @@
         });
     }
 
-    const viewPending = status => searchButtonEl.classList[status ? 'add' : 'remove']('search__button--pending');*/
+    // const viewPending = status => searchButtonEl.classList[status ? 'add' : 'remove']('search__button--pending');
 
     function findHandler(e) {
         formFoundList(this.value.toLowerCase());
@@ -270,7 +270,7 @@
     const bodyEl = document.querySelector('#body-container');
 
     function fillContent() {
-        while (bodyEl.getBoundingClientRect().bottom - 100 <= window.innerHeight && dataFiltered.length) {
+        while (bodyEl.getBoundingClientRect().bottom - 1000 <= window.innerHeight && dataFiltered.length) {
             renderItem(dataFiltered.shift(), searchRegex);
         }
     }
@@ -288,7 +288,9 @@
         // dataFiltered.forEach(row => renderItem(row, searchRegex));
 
         // Отрендерить только те, что влезут в экран
-        fillContent();
+        raf(() => { // Чтоб сначала отрендерить, затем считать размеры для прокрутки
+            fillContent();
+        });
     };
 
 
@@ -303,7 +305,7 @@
             setTimeout(() => {
                 fillContent();
                 scrollThrottleFlag = false;
-            }, 100);
+            }, 500);
         }
     }
 
