@@ -1,3 +1,6 @@
+// TODO: Сделать отображения кол-ва найденных элементов
+// TODO: Сделать кнопку "вверх"
+
 (function () {
     // Заполнить фильтр чекбоксами
     const checkboxContainer = document.querySelector('#search-filter');
@@ -53,18 +56,20 @@
         item.search = {
             name: item.name.toLowerCase(),
             nameRus: item.nameRus.toLowerCase(),
-            desc: descTemplate.content.textContent.toLowerCase(),
+            desc: descTemplate.content.textContent.toLowerCase(), // Из html-разметки извлечь чистый текст для поиска
         };
     }
 
     function reduce(data, option) {
         return data.reduce((accumulator, section, sectionIndex) => {
+            // Извлечь названия поколений из заголовков артефактов и брелков
+            // У остальных просто взять заголовок, если он и есть поколение
             const generation = ['collectibles', 'trinkets'].some(item => item === option) ? section.title.match(/\((.+)\)/)[1] : section.title;
 
             section.content.forEach(item => {
                 item.generation = generation;
 
-                if (option && option !== 'pills') {
+                if (option && option !== 'pills') { // Не закрепляем имаги за пилюлями, они у них всегда разные
                     item.img = `img/${option}/${item.img}`;
 
                     if (option === 'collectibles') {
@@ -86,6 +91,7 @@
     }
 
 
+    // Преобразовать элементы, разделенные по поколениям, в плоский массив и слить вместе
     const dataSetSectioned = [
         'collectibles',
         'trinkets',
@@ -97,6 +103,8 @@
         return accum.concat(reduce(JSON.parse(window[dataSetItem]), dataSetItem));
     }, []);
 
+
+    // Слить массивы элементов без поколений
     const dataSet = [
         'runes',
         'cards',
@@ -114,7 +122,9 @@
         dataReduced = dataReduced.concat(data);
     });
 
-    function raf(fn) {
+
+    // Статус ожидания
+    /*function raf(fn) {
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 fn();
@@ -122,18 +132,21 @@
         });
     }
 
+    const viewPending = status => searchButtonEl.classList[status ? 'add' : 'remove']('search__button--pending');*/
+
     function findHandler(e) {
-        searchButtonEl.classList.add('search__button--pending');
+        formFoundList(this.value.toLowerCase());
+
+        // Задействовать статус ожидания
+        /*viewPending(true);
 
         raf(() => {
-            formList(this.value.toLowerCase());
-
-            raf(() => {
-                searchButtonEl.classList.remove('search__button--pending');
-            });
-        });
+            formFoundList(this.value.toLowerCase());
+            raf(() => viewPending(false));
+        });*/
     }
 
+    // Обработчики кнопок и инпутов
     const searchInputEl = document.querySelector('#search-input');
     searchInputEl.addEventListener('change', findHandler);
 
@@ -149,9 +162,9 @@
 
 
 
-
+    // Изменить фильтр по клику на чекбоксы
     const filter = {};
-    const filterButtonEls = document.querySelectorAll('[data-filter]');
+    const filterButtonEls = checkboxContainer.querySelectorAll('input[data-filter]');
 
     Array.from(filterButtonEls).forEach(item => {
         filter[item.dataset.filter] = false;
@@ -165,21 +178,74 @@
 
 
 
-
+    // Пометить найденный текст
     function highlight(regex, string) {
         return regex ? string.replace(regex, matched => `<span class="found">${matched}</span>`) : string;
     }
 
+
     const contentEl = document.querySelector('#content');
     const template = document.querySelector('#template').innerHTML.trim();
 
-    const formList = search => {
-        while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild);
+    const renderItem = (row, searchRegex) => {
+        const rowTemplateEl = document.createElement('template');
 
+        // Присвоить таблеткам произвольную иконку
+        if (row.types && row.types.some(type => type === 'pills')) {
+            row.img = `img/pills/${~~(Math.random() * 13 + 1)}.png`;
+        }
+
+        /*rowTemplateEl.innerHTML = template
+            .replace('__generation__', row.generation)
+            .replace('__name__', highlight(regex, row.name))
+            .replace('__name_rus__', highlight(regex, row.nameRus))
+            .replace('__img__', row.img)
+            .replace('__desc__', highlight(regex, row.desc));*/
+
+        rowTemplateEl.innerHTML = template;
+        const content = rowTemplateEl.content;
+        const item = content.firstChild;
+
+
+        const topEl = content.querySelector('.top');
+
+        // Убрать блок с для поколения, если поколения нет
+        if (row.generation) {
+            topEl.textContent = row.generation;
+        } else {
+            topEl.remove();
+        }
+
+        content.querySelector('.name').innerHTML = highlight(searchRegex, row.name);
+        content.querySelector('.name-rus').innerHTML = highlight(searchRegex, row.nameRus);
+        content.querySelector('img').src = row.img;
+        content.querySelector('.bottom').innerHTML = highlight(searchRegex, row.desc);
+
+        // Отметить тип артефактов, активный, или пассивный
+        if (row.hasOwnProperty('type')) {
+            item.classList.add(row.type);
+        }
+
+        contentEl.appendChild(item);
+    };
+
+
+    // Спрятать контейнер для элементов, если он пуст
+    function handleContentVisibility(list) {
+        if (list.length) {
+            contentEl.removeAttribute('style');
+        } else {
+            contentEl.style.display = 'none';
+        }
+    }
+
+
+    // Фильтровать элементы в соответствии с фильтром и поиском
+    function filterList(list, search) {
         const activeFilters = Object.keys(filter).filter(filterItem => filter[filterItem]);
         const isFilterSet = activeFilters.length;
 
-        const dataFiltered = dataReduced.filter(item => {
+        return list.filter(item => {
             const isTextFound = ~item.search.name.indexOf(search) ||
                 ~item.search.nameRus.indexOf(search) ||
                 ~item.search.desc.indexOf(search);
@@ -189,53 +255,51 @@
             return item.hasOwnProperty('types') && isTextFound &&
                 activeFilters.every(filterItem => item.types.some(type => type === filterItem));
         });
+    }
 
-        if (dataFiltered.length) {
-            contentEl.removeAttribute('style');
-        } else {
-            contentEl.style.display = 'none';
+
+
+    let dataFiltered = [];
+    let searchRegex;
+
+
+    // const bodyRect = document.body.getBoundingClientRect();
+
+    function fillContent() {
+        while (document.body.getBoundingClientRect().bottom - 100 <= window.innerHeight && dataFiltered.length) {
+            renderItem(dataFiltered.shift(), searchRegex);
         }
-
-        const regex = search ? new RegExp(search, 'gi') : null;
-
-        dataFiltered.forEach(row => {
-            const rowTemplateEl = document.createElement('template');
-
-            // Присвоить таблеткам произвольную иконку
-            if (row.types && row.types.some(type => type === 'pills')) {
-                row.img = `img/pills/${~~(Math.random() * 13 + 1)}.png`;
-            }
-
-            /*rowTemplateEl.innerHTML = template
-                .replace('__generation__', row.generation)
-                .replace('__name__', highlight(regex, row.name))
-                .replace('__name_rus__', highlight(regex, row.nameRus))
-                .replace('__img__', row.img)
-                .replace('__desc__', highlight(regex, row.desc));*/
-
-            rowTemplateEl.innerHTML = template;
-            const content = rowTemplateEl.content;
-            const item = content.firstChild;
+    }
 
 
-            const topEl = content.querySelector('.top');
+    const formFoundList = search => {
+        while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild);
+        dataFiltered = filterList(dataReduced, search);
+        handleContentVisibility(dataFiltered);
+        searchRegex = search ? new RegExp(search, 'gi') : null;
 
-            if (row.generation) {
-                topEl.textContent = row.generation;
-            } else {
-                topEl.remove();
-            }
+        // Отрендерить все сразу
+        // dataFiltered.forEach(row => renderItem(row, searchRegex));
 
-            content.querySelector('.name').innerHTML = highlight(regex, row.name);
-            content.querySelector('.name-rus').innerHTML = highlight(regex, row.nameRus);
-            content.querySelector('img').src = row.img;
-            content.querySelector('.bottom').innerHTML = highlight(regex, row.desc);
-
-            if (row.hasOwnProperty('type')) {
-                item.classList.add(row.type);
-            }
-
-            contentEl.appendChild(item);
-        });
+        // Отрендерить только те, что влезут в экран
+        fillContent();
     };
+
+
+
+    // Бесконенчная прокрутка
+    let scrollThrottleFlag;
+
+    function scrollHandler() {
+        if (!scrollThrottleFlag) {
+            scrollThrottleFlag = true;
+
+            setTimeout(() => {
+                fillContent();
+                scrollThrottleFlag = false;
+            }, 100);
+        }
+    }
+
+    window.addEventListener('scroll', scrollHandler);
 })();
