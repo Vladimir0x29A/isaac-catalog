@@ -242,6 +242,10 @@
             item.classList.add(row.type);
         }
 
+        item.addEventListener('click', function () {
+            this.classList.toggle('collapsed');
+        });
+
         contentEl.appendChild(item);
     };
 
