@@ -188,6 +188,14 @@
     }
 
 
+    let collapsed = false;
+
+    /*document.querySelector('#checkbox-collapsed').addEventListener('change', function () {
+        collapsed = this.checked;
+    });*/
+
+
+
     const contentEl = document.querySelector('#content');
     const template = document.querySelector('#template').innerHTML.trim();
 
@@ -224,6 +232,10 @@
         content.querySelector('.name-rus').innerHTML = highlight(searchRegex, row.nameRus);
         content.querySelector('img').src = row.img;
         content.querySelector('.bottom').innerHTML = highlight(searchRegex, row.desc);
+
+        if (collapsed) {
+            item.classList.add('collapsed');
+        }
 
         // Отметить тип артефактов, активный, или пассивный
         if (row.hasOwnProperty('type')) {
@@ -279,6 +291,7 @@
 
     const formFoundList = search => {
         while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild); // Очистить контент
+        collapsed = !search;
         dataFiltered = filterList(dataReduced, search);
         countEl.textContent = dataFiltered.length;
         handleContentVisibility(dataFiltered);

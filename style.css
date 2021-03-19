@@ -87,6 +87,11 @@ h2 {
     border-top: 1px #4a515d solid;
 }
 
+.row.collapsed .top,
+.row.collapsed .bottom {
+    display: none;
+}
+
 p {
     margin: 0;
 }
@@ -225,6 +230,22 @@ a {
     margin-left: -12px;
     margin-bottom: -8px;
     font-size: 14px;
+}
+
+.search__options {
+    position: relative;
+    padding-top: 12px;
+    margin-top: 12px;
+}
+
+.search__options::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(74, 81, 93, .5);
 }
 
 .search__filter .checkbox {
